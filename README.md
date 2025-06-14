@@ -7,13 +7,13 @@ A Wasserstein Generative Adversarial Network (WGAN) is used to fool Intrusion de
 Please make sure that you have the following requirements installed on your system:
 
 - Python (>= 3.7, lower 3.x versions may work but have not been tested)
-- [Git Large File Storage](https://git-lfs.github.com/)
+- [Git Large File Storage]
 
-```
+sudo apt-get install git-lfs
+git lfs install
 
 **Note:** We recommend that you install the Python packages in a virtual environment. See the next section for how to do this, and then proceed with the rest of this section afterwards.
 
-```sh
 pip install -r requirements.txt
 ```
 
@@ -21,9 +21,26 @@ pip install -r requirements.txt
 
 A virtual environment helps you to avoid that Python packages in this project does not conflict with other Python packages in your system. Follow the instructions [on this site](https://virtualenv.pypa.io/en/stable/installation/) to install the virtualenv package, which enables you to create virtual environments.
 
+# 1) Cài virtualenv (nếu chưa có)
+pip install virtualenv
+
+# 2) Tạo thư mục env với Python 3
+virtualenv --python=python3 env
+
+# hoặc dùng built‑in venv
+python3 -m venv env
+
+# 3) Kích hoạt môi trường ảo
+source env/bin/activate   # Linux/macOS
+env\Scripts\activate      # Windows PowerShell
+
+# Sau khi xài xong, tắt với:
+deactivate
+
+
 Once virtualenv is installed, you will need to run the following commands to setup a virtual environment for this project.
 
-```sh
+
 virtualenv env
 ```
 
