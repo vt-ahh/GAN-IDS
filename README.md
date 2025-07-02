@@ -21,6 +21,7 @@ pip install -r requirements.txt
 
 A virtual environment helps you to avoid that Python packages in this project does not conflict with other Python packages in your system. Follow the instructions [on this site](https://virtualenv.pypa.io/en/stable/installation/) to install the virtualenv package, which enables you to create virtual environments.
 
+# Linux/macOS
 # 1) Cài virtualenv (nếu chưa có)
 pip install virtualenv
 
@@ -31,9 +32,20 @@ virtualenv --python=python3 env
 python3 -m venv env
 
 # 3) Kích hoạt môi trường ảo
-source env/bin/activate   # Linux/macOS
-env\Scripts\activate      # Windows PowerShell
+source env/bin/activate   
 
+# Windows PowerShell
+# 1) Cài đặt env trong thư mục chứa (Ví dụ C:\Users\Dell\IDSGAN)
+python -m venv env
+
+Lệnh này sẽ sinh ra thư mục env\Scripts\.
+
+# 2) Cho phép chạy script PowerShell (chỉ trong phiên này):
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+
+# 3) Kích hoạt virtualenv trên PowerShell:
+ . .\env\Scripts\Activate.ps1 
+    
 # Sau khi xài xong, tắt với:
 deactivate
 
