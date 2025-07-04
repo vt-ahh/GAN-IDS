@@ -35,6 +35,11 @@ def test_ids(options):
     save_model_directory = os.path.join(options.save_model, options.name)
     model.load(save_model_directory)
     adversarial = model.generate(adversarial_nff).detach()
+    print(f"\n[INFO] First 5 generated adversarial samples ({options.attack}):")
+    print(adversarial[:5].numpy())
+    generated_file = f"generated_{options.attack.lower()}.csv"
+    pd.DataFrame(adversarial.numpy()).to_csv(generated_file, index=False)
+    print(f"[INFO] Generated adversarial data saved to: {generated_file}")
     data = reassemble(options.attack, adversarial, adversarial_ff, nor_nff, nor_ff)
     labels = np.concatenate((labels_mal, labels_nor), axis=0)
     tester = get_tester(options.attack, data, labels)
@@ -76,17 +81,42 @@ def reassemble(type, adversarial_nff, adversarial_ff, normal_nff, normal_ff):
     return output
 
 def get_tester(attack, data, labels):
+    # ánh xạ tên cấu hình sang tên file model trong models/
+    filename_map = {
+        'decision_tree':          'dt.joblib',
+        'k_nearest_neighbors':    'knn.joblib',
+        'logistic_regression':    'lr.joblib',
+        'multi_layer_perceptron': 'mlp.joblib',
+        'naive_bayes':            'nb.joblib',
+        'random_forest':          'rf.joblib',
+        'support_vector_machine': 'svm.joblib'
+    }
+
     def tester(configuration):
         name, config_path = configuration
-        arguments = ['--config', config_path]
+
+        # tìm file model tương ứng
+        model_filename = filename_map.get(name)
+        if model_filename is None:
+            raise ValueError(f"No model file mapping for IDS '{name}'")
+
+        model_path = os.path.join('models', model_filename)
+
+        # xây dựng arguments để parse cho test_ids
+        arguments = [
+            '--config',    config_path,
+            '--save_model', model_path
+        ]
         if attack is not None:
-            arguments.append('--attack')
-            arguments.append(attack)
+            arguments += ['--attack', attack]
+
         options = parse_test_ids_arguments(arguments)
-        scores = test(options, data, labels)
-        named_scores = [name, *scores]
-        return named_scores
+        scores  = test(options, data, labels)
+        return [name, *scores]
+
     return tester
+
+
 
 def test(options, data, labels):
     n_attributes = data.shape[1]
