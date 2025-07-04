@@ -36,6 +36,9 @@ def test_ids(options):
     model.load(save_model_directory)
     adversarial = model.generate(adversarial_nff).detach()
     print(f"\n[INFO] First 5 generated adversarial samples ({options.attack}):")
+    #N=20
+    #print(adversarial[:N].numpy())      if print more
+
     print(adversarial[:5].numpy())
     generated_file = f"generated_{options.attack.lower()}.csv"
     pd.DataFrame(adversarial.numpy()).to_csv(generated_file, index=False)
